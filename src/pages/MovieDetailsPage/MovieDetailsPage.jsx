@@ -1,34 +1,87 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, Outlet } from "react-router-dom";
-import { fetchMovieDetails } from "../../services/tmdbAPI";
-import styles from "./MovieDetailsPage.module.css";
+import { useRef, useEffect, useState, Suspense } from "react";
+import {
+  useParams,
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 
-const MovieDetailsPage = () => {
+import { getMovieDetails } from "../../services/tmdbAPI";
+import clsx from "clsx";
+import style from "./MovieDetailsPage.module.css";
+
+export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const location = useLocation();
+  const backLinkRef = useRef(location.state?.from ?? "/movies");
 
   useEffect(() => {
-    fetchMovieDetails(movieId).then(setMovie);
+    async function fetchData() {
+      try {
+        const data = await getMovieDetails(movieId);
+        setMovie(data);
+      } catch (error) {
+        setError(error.message || "Error fetching data");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, [movieId]);
 
-  if (!movie) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  if (!movie) {
+    return <p>No movie details available</p>;
+  }
 
   return (
-    <div className={styles.details}>
-      <Link to="/">Go back</Link>
-      <h1>{movie.title}</h1>
-      <img
-        src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-        alt={movie.title}
-      />
-      <p>{movie.overview}</p>
-      <div>
-        <Link to="cast">Cast</Link>
-        <Link to="reviews">Reviews</Link>
+    <div className={style.movieDetailWrap}>
+      <Link to={backLinkRef.current} className={style.btn}>
+        Go back
+      </Link>
+
+      <h1 className={style.title}>{movie.title}</h1>
+      <div className={style.poster}>
+        <img
+          className={style.img}
+          src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+          alt={movie.title}
+        />
+        <p className={style.textOverview}>{movie.overview}</p>
       </div>
-      <Outlet />
+      <div className={style.castReviewsWrap}>
+        <NavLink
+          to="cast"
+          className={(props) => {
+            return clsx(style.link, props.isActive && style.active);
+          }}
+        >
+          Cast
+        </NavLink>
+        <NavLink
+          to="reviews"
+          className={(props) => {
+            return clsx(style.link, props.isActive && style.active);
+          }}
+        >
+          Reviews
+        </NavLink>
+      </div>
+      <Suspense fallback={<p className={style.textWarning}>Loading...</p>}>
+        <Outlet />
+      </Suspense>
     </div>
   );
-};
-
-export default MovieDetailsPage;
+}

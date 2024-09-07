@@ -1,23 +1,43 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchMovieReviews } from "../../services/tmdbAPI";
+import { getMovieReviews } from "../../services/tmdbAPI";
 import styles from "./MovieReviews.module.css";
 
 const MovieReviews = () => {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchMovieReviews(movieId).then(setReviews);
+    async function fetchData() {
+      try {
+        const data = await getMovieReviews(movieId);
+        setReviews(data.results || []);
+      } catch (error) {
+        setError(error, "Failed to fetch reviews");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, [movieId]);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
-    <div className={styles.reviews}>
+    <div className={styles.reviewsWrap}>
       {reviews.length > 0 ? (
         reviews.map((review) => (
           <div key={review.id}>
-            <h3>{review.author}</h3>
-            <p>{review.content}</p>
+            <h3 className={styles.reviewsTitleAuthor}>{review.author}</h3>
+            <p className={styles.reviewsContent}>{review.content}</p>
           </div>
         ))
       ) : (
