@@ -36,7 +36,7 @@ const MovieReviews = () => {
       {reviews.length > 0 ? (
         reviews.map((review) => (
           <div key={review.id}>
-            <h3 className={styles.reviewsTitleAuthor}>{review.author}</h3>
+            <h3 className={styles.reviewsTitler}>{review.author}</h3>
             <p className={styles.reviewsContent}>{review.content}</p>
           </div>
         ))

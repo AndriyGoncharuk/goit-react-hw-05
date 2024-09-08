@@ -1,20 +1,33 @@
 import { useEffect, useState } from "react";
 import { getTrendingMovies } from "../../services/tmdbAPI";
 import MovieList from "../../components/MovieList/MovieList";
-// import styles from "./HomePage.module.css";
 
 const HomePage = () => {
   const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchMovies() {
+    async function fetchData() {
       try {
         const data = await getTrendingMovies();
         setMovies(data.results || []);
-      } catch (error) {}
+      } catch (error) {
+        setError(error.message || "Error fetching data");
+      } finally {
+        setLoading(false);
+      }
     }
-    fetchMovies();
+    fetchData();
   }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div>

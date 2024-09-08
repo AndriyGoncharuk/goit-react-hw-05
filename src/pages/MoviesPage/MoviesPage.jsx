@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getSearchMovies } from "../../services/tmdbAPI";
 import { useSearchParams } from "react-router-dom";
 import MovieList from "../../components/MovieList/MovieList";
-// import styles from "./MoviesPage.module.css";
+import style from "./MoviesPage.module.css";
 
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
@@ -35,8 +35,8 @@ const MoviesPage = () => {
     }
   };
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
+  const handleSearch = async (e) => {
+    e.preventDefault();
     if (!query.trim()) {
       setInputError("Please enter a search value.");
       return;
@@ -49,21 +49,24 @@ const MoviesPage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSearch}>
+    <div className={style.MoviesPageWrap}>
+      <form onSubmit={handleSearch} className={style.MoviesPageForm}>
         <input
+          className={style.MoviesPageInput}
           type="text"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search for a movie"
         />
-        <button type="submit">Search</button>
+        <button type="submit" className={style.MoviesPageButton}>
+          Search
+        </button>
       </form>
-      {inputError && <p style={{ color: "red" }}>{inputError}</p>}
+      {inputError && <p style={{ color: "orangered" }}>{inputError}</p>}
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {!loading && !error && movies.length === 0 && query && (
-        <p>No movies found for "{query}"</p>
+        <p className={style.MoviesPageNftext}>No movies found for "{query}"</p>
       )}
       {!loading && !error && movies.length > 0 && <MovieList movies={movies} />}
     </div>

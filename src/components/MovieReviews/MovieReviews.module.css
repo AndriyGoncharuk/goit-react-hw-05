@@ -1,0 +1,13 @@
+.reviewsWrap {
+  padding: 10px;
+}
+
+.reviewsTitle {
+  font-size: 24px;
+  color: rgb(15, 7, 26);
+  background-color: #e8ebfa;
+}
+.reviewsContent {
+  font-size: 20px;
+  color: rgb(15, 7, 26);
+}

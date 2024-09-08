@@ -6,7 +6,7 @@ import {
   Outlet,
   useLocation,
 } from "react-router-dom";
-
+import { GoArrowLeft } from "react-icons/go";
 import { getMovieDetails } from "../../services/tmdbAPI";
 import clsx from "clsx";
 import style from "./MovieDetailsPage.module.css";
@@ -49,6 +49,7 @@ export default function MovieDetailsPage() {
   return (
     <div className={style.movieDetailWrap}>
       <Link to={backLinkRef.current} className={style.btn}>
+        <GoArrowLeft className={style.arrow} />
         Go back
       </Link>
 

@@ -1,0 +1,16 @@
+.active {
+  color: rgb(143, 126, 16);
+}
+
+.navList {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 24px;
+  padding: 10px;
+
+  list-style-type: none;
+  font-size: 24px;
+  color: rgb(15, 7, 26);
+  background: #e8ebfa;
+}

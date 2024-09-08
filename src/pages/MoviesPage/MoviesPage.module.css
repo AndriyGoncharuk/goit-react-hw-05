@@ -1,0 +1,40 @@
+.MoviesPageWrap {
+}
+
+.MoviesPageForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+.MoviesPageInput {
+  padding: 8px 10px;
+  font-size: 16px;
+  border: 2px solid #0d0d0d;
+  border-radius: 4px;
+  width: 250px;
+  margin: 4px;
+}
+
+.MoviesPageButton {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  min-width: 100px;
+  height: 40px;
+  background: #375386;
+  font-weight: 500;
+  font-size: 16px;
+  color: #ffffffd0;
+  cursor: pointer;
+}
+
+.MoviesPageButton:hover {
+  background: #0d1a4c;
+}
+
+.MoviesPageNftext {
+  font-size: 20px;
+  color: rgb(34, 13, 4);
+}
